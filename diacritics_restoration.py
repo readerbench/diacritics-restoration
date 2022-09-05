@@ -1,4 +1,5 @@
 import pickle
+from tabnanny import verbose
 
 import numpy as np
 import tensorflow as tf
@@ -15,12 +16,13 @@ class DiacriticsRestoration(object):
     Wrapper for Diacritics restoration
     """
 
-    def __init__(self):
+    def __init__(self, verbose='silent'):
 
         self.bert_max_seq_len = 512
         self.max_windows = 280
         self.max_sentences = 10
         self.max_sentence_length = 256
+        self.verbose = verbose # 0 -> 'silent', 1 -> 'auto'
 
         # load model
         if check_version(Lang.RO, ["models", "diacritice", "base"]):
@@ -64,7 +66,9 @@ class DiacriticsRestoration(object):
                                         'sent_ids': [self.max_windows], 'mask': [self.max_windows], 'char_windows': [self.max_windows, 11]}, [self.max_windows, 5]))
         x_dataset = x_dataset.batch(1)
 
-        predictions = self.model.predict(x_dataset, steps=(diac_count//self.max_windows)+1)
+        print('Ceva')
+        predictions = self.model.predict(x_dataset, steps=(diac_count//self.max_windows)+1, verbose=self.verbose)
+        print('Ceva')
 
         filtered_predictions = []
         for index in range(len(predictions[0])):
