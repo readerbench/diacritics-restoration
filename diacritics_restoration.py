@@ -66,9 +66,7 @@ class DiacriticsRestoration(object):
                                         'sent_ids': [self.max_windows], 'mask': [self.max_windows], 'char_windows': [self.max_windows, 11]}, [self.max_windows, 5]))
         x_dataset = x_dataset.batch(1)
 
-        print('Ceva')
         predictions = self.model.predict(x_dataset, steps=(diac_count//self.max_windows)+1, verbose=self.verbose)
-        print('Ceva')
 
         filtered_predictions = []
         for index in range(len(predictions[0])):
