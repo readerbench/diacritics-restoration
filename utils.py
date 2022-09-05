@@ -2,9 +2,6 @@ import statistics
 import random
 import sys
 import pickle
-import tensorflow as tf
-import os
-from sklearn.utils import class_weight
 import numpy as np
 from collections import Counter
 
@@ -777,15 +774,3 @@ def generator_bert_cnn_features_string(string, char_to_id_dict, window_size, tok
 
     yield {'bert_input_ids':bert_input_ids, 'bert_segment_ids':bert_segment_ids, 'token_ids': token_ids, 
             'sent_ids': sentence_ids, 'mask': windows_mask, 'char_windows': char_windows}, labels
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    print("utils.py")
-    # build_char_vocab()
-
