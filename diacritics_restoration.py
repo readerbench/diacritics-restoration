@@ -35,14 +35,14 @@ class DiacriticsRestoration(object):
 
     # replace_all: replaces all diacritics(if existing) with model predictions
     # replace_missing: replaces only characters that accept and don't have diacritics with model predictions; keeps existing diacritics
-    def process_string(self, string, mode="replace_all"):
+    def _process_string(self, string, mode="replace_all"):
         full_diacritics = set("aăâiîsștț")
         explicit_diacritics = set("ăâîșțĂÂÎȘȚ")
         if len(string) > self.max_sentence_length:
             result = ""
             for i in range(0, len(string), self.max_sentence_length):
                 substring = string[i:min(len(string), i+self.max_sentence_length)]
-                result += self.process_string(substring, mode)
+                result += self._process_string(substring, mode)
             return result
         working_string = string.lower()
         clean_string = ""
@@ -102,3 +102,29 @@ class DiacriticsRestoration(object):
             complete_string += new_char
 
         return complete_string
+
+    # Eliminates problematic substrings from diacritics generation and calls _process_string for the rest
+    def process_string(self, string, mode="replace_all"):
+        
+        substrings = string.split()
+        problematic_indices = []
+        start_index = 0
+        
+        for substring in substrings:
+            start_index = string.find(substring, start_index)
+            if len(substring) > 44: #Longest Romanian word is 44 letters long
+                problematic_indices.append((start_index, start_index + len(substring)))
+            start_index += len(substring)
+
+        # Remove problematic substrings and process for diacritics
+        new_string = string
+        for start, end in reversed(problematic_indices):
+            new_string = new_string[:start] + new_string[end:]
+
+        result = self._process_string(new_string, mode)
+
+        # Add problematic substring back into processed string
+        for start, end in problematic_indices:
+            result = result[:start] + string[start:end] + result[start:]
+
+        return result
