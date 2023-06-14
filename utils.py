@@ -151,7 +151,8 @@ def get_char_from_label(basic_char, predicted_class):
     else:
         print("Error in utils.get_char_from_label")
         print("basic_char =", basic_char, "predicted_class =", predicted_class)
-        sys.exit()
+        return basic_char
+#         sys.exit()
 
 # generator features for cnn: only window and label
 def generator_cnn_features(filepath, char_to_id_dict, window_size):
